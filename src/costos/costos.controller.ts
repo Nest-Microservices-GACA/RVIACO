@@ -28,7 +28,7 @@ export class CostosController {
 
   @MessagePattern({ cmd: 'costo.update' })
   update(@Payload() updateCostoDto: UpdateCostoDto) {
-    return this.costosService.update(BigInt(updateCostoDto.id_proyecto), updateCostoDto);
+    return this.costosService.update(updateCostoDto.id, updateCostoDto);
   }
 
   @MessagePattern({ cmd: 'costo.remove' })

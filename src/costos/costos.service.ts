@@ -62,6 +62,7 @@ export class CostosService {
     const costo = await this.costoRepository.findOneBy({ id_proyecto: BigInt(id) });
 
     if( !costo ){
+      this.logger.error('[costo.findOne.service]');
       throw new RpcException({ 
         status: HttpStatus.NOT_FOUND, 
         message: `Costo del proyecto con ID ${ id } no encontrado`
@@ -71,8 +72,41 @@ export class CostosService {
     return costo; 
   }
 
-  update(id: bigint, updateCostoDto: UpdateCostoDto) {
-    return `This action updates a #${id} costo`;
+  async update(keyx: number, updateCostoDto: UpdateCostoDto) {
+    try {
+      const costo = await this.costoRepository.findOne({ where: { keyx: keyx } });
+      if (!costo) {
+        throw new RpcException({
+          status: 'Error',
+          message: `Costo con Keyx ${ keyx } no encontrado`,
+        });
+      }
+
+      const updatedCostoData = {
+        ...costo,
+        ...updateCostoDto,
+        num_empleado: BigInt(updateCostoDto.num_empleado),
+        id_proyecto: BigInt(updateCostoDto.id_proyecto),
+      };
+
+      const { id, ...updateCosto } = updatedCostoData;
+  
+      await this.costoRepository.save(updateCosto);
+
+      
+      return {
+        ...updateCosto,
+        num_empleado: updatedCostoData.num_empleado.toString(),
+        id_proyecto: updatedCostoData.id_proyecto.toString(),
+      };
+
+    } catch (error) {
+      this.logger.error('[costo.update.service]',error);
+      throw new RpcException({
+        status: 'Error',
+        message: `Hubo un error al actualizar ${error}`,
+      });
+    }
   }
 
   remove(id: number) {
