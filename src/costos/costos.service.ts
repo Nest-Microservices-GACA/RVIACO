@@ -109,7 +109,22 @@ export class CostosService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} costo`;
+  async remove(id: number) {
+
+    const costo = await this.costoRepository.findOne({ where: { keyx: id } });
+
+    if (!costo) {
+
+      throw new RpcException({ 
+        status: HttpStatus.NOT_FOUND, 
+        message: `Costo con keyx ${id} no encontrado`
+      });
+    }
+
+    const key = costo.keyx;
+
+    await this.costoRepository.remove( costo );
+
+    return { message: `Costo con keyx${key} eliminado correctamente` };
   }
 }
