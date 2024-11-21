@@ -8,27 +8,27 @@ import { CreateCostoDto, UpdateCostoDto } from './dto';
 export class CostosController {
   constructor(private readonly costosService: CostosService) {}
 
-  @MessagePattern({ cmd: 'costo.create' })
+  @MessagePattern('costo.create')
   create(@Payload() createCostoDto: CreateCostoDto) {
     return this.costosService.create(createCostoDto);
   }
 
-  @MessagePattern({ cmd: 'costo.findAll' })
+  @MessagePattern('costo.findAll')
   findAll() {
     return this.costosService.findAll();
   }
 
-  @MessagePattern({ cmd: 'costo.findOne' })
+  @MessagePattern('costo.findOne')
   findOne(@Payload() id: number) {
     return this.costosService.findOne(id);
   }
 
-  @MessagePattern({ cmd: 'costo.update' })
+  @MessagePattern('costo.update')
   update(@Payload() updateCostoDto: UpdateCostoDto) {
     return this.costosService.update(updateCostoDto.id, updateCostoDto);
   }
 
-  @MessagePattern({ cmd: 'costo.remove' })
+  @MessagePattern('costo.remove')
   remove(@Payload() id: number) {
     return this.costosService.remove(id);
   }

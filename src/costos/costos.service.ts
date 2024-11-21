@@ -77,7 +77,7 @@ export class CostosService {
       if (!costo) {
         this.logger.error('[costo.update.service]');
         throw new RpcException({
-          status: 'Error',
+          status: HttpStatus.NOT_FOUND,
           message: `Costo con Keyx ${ keyx } no encontrado`,
         });
       }
@@ -126,6 +126,6 @@ export class CostosService {
 
     await this.costoRepository.remove( costo );
 
-    return { message: `Costo con keyx${key} eliminado correctamente` };
+    return { message: `Costo ${key} eliminado correctamente` };
   }
 }
