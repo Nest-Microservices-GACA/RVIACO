@@ -114,7 +114,8 @@ export class CostosService {
     const costo = await this.costoRepository.findOne({ where: { keyx: id } });
 
     if (!costo) {
-      this.logger.error('[costo.remove.service]');
+      this.logger.error('[costo.findOne.service]');
+
       throw new RpcException({ 
         status: HttpStatus.NOT_FOUND, 
         message: `Costo con keyx ${id} no encontrado`
