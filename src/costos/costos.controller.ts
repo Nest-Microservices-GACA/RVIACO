@@ -4,9 +4,6 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CostosService } from './costos.service';
 import { CreateCostoDto, UpdateCostoDto } from './dto';
 
-// netstat -ano | findstr :3003
-// taskkill /PID 12345 /F
-
 @Controller()
 export class CostosController {
   constructor(private readonly costosService: CostosService) {}

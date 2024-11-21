@@ -6,7 +6,6 @@ import { Costo } from './entities';
 import { CreateCostoDto, UpdateCostoDto } from './dto';
 import { RpcException } from '@nestjs/microservices';
 
-
 @Injectable()
 export class CostosService {
 
@@ -76,6 +75,7 @@ export class CostosService {
     try {
       const costo = await this.costoRepository.findOne({ where: { keyx: keyx } });
       if (!costo) {
+        this.logger.error('[costo.update.service]');
         throw new RpcException({
           status: 'Error',
           message: `Costo con Keyx ${ keyx } no encontrado`,
@@ -114,7 +114,7 @@ export class CostosService {
     const costo = await this.costoRepository.findOne({ where: { keyx: id } });
 
     if (!costo) {
-
+      this.logger.error('[costo.remove.service]');
       throw new RpcException({ 
         status: HttpStatus.NOT_FOUND, 
         message: `Costo con keyx ${id} no encontrado`
