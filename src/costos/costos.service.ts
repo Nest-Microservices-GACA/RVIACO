@@ -17,7 +17,6 @@ export class CostosService {
   ){}
 
   async create(createCostoDto: CreateCostoDto) {
-    console.log('This action adds a new costo');
     try{
 
       const costoData = {
@@ -36,6 +35,7 @@ export class CostosService {
       };
 
     }catch(error){
+      this.logger.error('[costo.create.service]',error);
       throw new RpcException({ 
         status: 'Error', 
         message: `Hubo un error ${error}`
@@ -43,8 +43,19 @@ export class CostosService {
     }
   }
 
-  findAll() {
-    return `This action returns all costos`;
+  async findAll() {
+    try {
+
+      const costos = await this.costoRepository.find();
+      return costos ;
+      
+    } catch (error) {
+      this.logger.error('[costo.findAll.service]',error);
+      throw new RpcException({ 
+        status: 'Error', 
+        message: `Hubo un error ${error}`
+      }); 
+    }
   }
 
   findOne(id: number) {
