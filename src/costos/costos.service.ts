@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -48,7 +48,7 @@ export class CostosService {
 
       const costos = await this.costoRepository.find();
       return costos ;
-      
+
     } catch (error) {
       this.logger.error('[costo.findAll.service]',error);
       throw new RpcException({ 
@@ -58,8 +58,17 @@ export class CostosService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} costo`;
+  async findOne(id: number) {
+    const costo = await this.costoRepository.findOneBy({ id_proyecto: BigInt(id) });
+
+    if( !costo ){
+      throw new RpcException({ 
+        status: HttpStatus.NOT_FOUND, 
+        message: `Costo del proyecto con ID ${ id } no encontrado`
+      });
+    }
+
+    return costo; 
   }
 
   update(id: bigint, updateCostoDto: UpdateCostoDto) {
