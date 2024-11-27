@@ -36,8 +36,8 @@ export class CostosService {
     }catch(error){
       this.logger.error('[costo.create.service]',error);
       throw new RpcException({ 
-        status: 'Error', 
-        message: `Hubo un error ${error}`
+        status: 500, 
+        message: `Error COSTOS ${error}`
       });
     }
   }
@@ -46,13 +46,17 @@ export class CostosService {
     try {
 
       const costos = await this.costoRepository.find();
-      return costos ;
+      if( costos.length === 0 ){
+        return { costos: [], total: 0}
+      }
+
+      return { costos, total: costos.length };
 
     } catch (error) {
       this.logger.error('[costo.findAll.service]',error);
       throw new RpcException({ 
-        status: 'Error', 
-        message: `Hubo un error ${error}`
+        status: 500, 
+        message: `Error COSTOS ${error}`
       }); 
     }
   }
@@ -72,13 +76,12 @@ export class CostosService {
   }
 
   async update(keyx: number, updateCostoDto: UpdateCostoDto) {
-    try {
       const costo = await this.costoRepository.findOne({ where: { keyx: keyx } });
       if (!costo) {
         this.logger.error('[costo.update.service]');
         throw new RpcException({
           status: HttpStatus.NOT_FOUND,
-          message: `Costo con Keyx ${ keyx } no encontrado`,
+          message: `Costo ${ keyx } no encontrado`,
         });
       }
 
@@ -99,14 +102,6 @@ export class CostosService {
         num_empleado: updatedCostoData.num_empleado.toString(),
         id_proyecto: updatedCostoData.id_proyecto.toString(),
       };
-
-    } catch (error) {
-      this.logger.error('[costo.update.service]',error);
-      throw new RpcException({
-        status: 'Error',
-        message: `Hubo un error al actualizar ${error}`,
-      });
-    }
   }
 
   async remove(id: number) {
@@ -118,7 +113,7 @@ export class CostosService {
 
       throw new RpcException({ 
         status: HttpStatus.NOT_FOUND, 
-        message: `Costo con keyx ${id} no encontrado`
+        message: `Costo ${id} no encontrado`
       });
     }
 
